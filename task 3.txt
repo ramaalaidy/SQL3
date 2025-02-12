@@ -1,0 +1,98 @@
+**********************task 3**********************************
+
+CREATE DATABASE HR;
+
+USE HR;
+
+-- إنشاء جدول الموظفين
+CREATE TABLE Employee (
+  employee_id INT PRIMARY KEY,
+  fname VARCHAR(100),
+  lname VARCHAR(100),
+  job_title VARCHAR(100),
+  salary INT,
+  hire_date DATE,
+  department_id INT,
+  CONSTRAINT fk_employee_department FOREIGN KEY (department_id) REFERENCES Department(department_id)
+);
+
+-- إنشاء جدول الأقسام
+CREATE TABLE Department (
+  department_id INT PRIMARY KEY,
+  department_name VARCHAR(100),
+  location_id INT,
+  CONSTRAINT fk_department_location FOREIGN KEY (location_id) REFERENCES Location(location_id)
+);
+
+-- إنشاء جدول المواقع
+CREATE TABLE Location (
+  location_id INT PRIMARY KEY,
+  city VARCHAR(100),
+  country VARCHAR(100)
+);
+
+-- إنشاء جدول المشاريع
+CREATE TABLE Project (
+  project_id INT PRIMARY KEY,
+  project_name VARCHAR(100),
+  start_date DATE,
+  end_date DATE
+);
+
+-- إنشاء جدول يربط الموظفين بالمشاريع (جدول وسيط لعلاقة متعدد لمتعدد)
+CREATE TABLE Employee_Project (
+  employee_id INT,
+  project_id INT,
+  PRIMARY KEY (employee_id, project_id),
+  CONSTRAINT fk_employee_project_employee FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
+  CONSTRAINT fk_employee_project_project FOREIGN KEY (project_id) REFERENCES Project(project_id)
+);
+
+-- إدراج بيانات في جدول المواقع
+INSERT INTO Location (location_id, city, country) 
+VALUES
+(1, 'Amman', 'Jordan'),
+(2, 'Jeddah', 'Saudi Arabia'),
+(3, 'Kuwait City', 'Kuwait'),
+(4, 'Doha', 'Qatar');
+
+-- إدراج بيانات في جدول الأقسام
+INSERT INTO Department (department_id, department_name, location_id)
+VALUES
+(1, 'Human Resources', 1),
+(2, 'Development', 2),
+(3, 'Sales', 3),
+(4, 'Customer Support', 4);
+
+-- إدراج بيانات في جدول الموظفين
+INSERT INTO Employee (employee_id, fname, lname, job_title, salary, hire_date, department_id)
+VALUES 
+(1, 'Ahmad', 'Khalid', 'Data Analyst', 700, '2023-11-10', 2),
+(2, 'Lina', 'Samir', 'Frontend Developer', 750, '2024-05-15', 2),
+(3, 'Yousef', 'Hassan', 'Graphic Designer', 650, '2024-09-20', 3),
+(4, 'Dana', 'Fouad', 'Backend Developer', 900, '2024-07-25', 2);
+
+-- إدراج بيانات في جدول المشاريع
+INSERT INTO Project (project_id, project_name, start_date, end_date) 
+VALUES
+(1, 'E-commerce Platform', '2025-02-10', '2025-08-20'),
+(2, 'Mobile App Development', '2025-03-15', '2025-09-25'), 
+(3, 'SEO Optimization', '2025-04-01', '2025-06-15'),
+(4, 'Cloud Migration', '2025-05-20', '2025-11-30');
+
+-- ربط الموظفين بالمشاريع
+INSERT INTO Employee_Project (employee_id, project_id)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4);
+
+-- تحديث راتب موظف معين
+UPDATE Employee
+SET salary = 750
+WHERE employee_id = 3;
+
+-- حذف قسم معين
+DELETE FROM Department
+WHERE department_id = 2;
